@@ -59,7 +59,9 @@ jobs:
 #    if: github.ref_type == 'tag'
     steps:
       - name: Deploy
-        run: gh-pages deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: target
 
   clean-up:
     runs-on: ubuntu-latest
