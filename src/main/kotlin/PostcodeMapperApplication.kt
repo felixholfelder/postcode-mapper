@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class PostcodeMapperApplication
 
 fun main(args: Array<String>) {
-	runApplication<PostcodeMapperApplication>(*args)
+  runApplication<PostcodeMapperApplication>(*args)
 }
