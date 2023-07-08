@@ -1,14 +1,12 @@
 FROM openjdk:17-alpine
 
-RUN echo
-
 ARG version
 ENV version=$version
 
 COPY . .
-RUN ./mvnw clean install package -Dversion=$version
+RUN ./mvnw clean install package
 
 EXPOSE 8080
-COPY target/postcode-mapper-${version}.jar app.jar
+COPY target/postcode-mapper-*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
