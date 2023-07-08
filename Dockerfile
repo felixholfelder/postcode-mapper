@@ -6,7 +6,7 @@ ENV revision="1.0.0"
 COPY . .
 RUN ./mvnw clean install package -Drevision=${revision}
 
-RUN ls -l
+RUN ls -l target
 
 EXPOSE 8080
 COPY /target/postcode-mapper-*.jar app.jar
