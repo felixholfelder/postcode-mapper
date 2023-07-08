@@ -6,6 +6,8 @@ ENV revision="1.0.0"
 COPY . .
 RUN ./mvnw clean install package -Drevision=${revision}
 
+ARG jarPath="target/postcode-mapper-${revision}.jar"
+
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "target/postcode-mapper-${revision}.jar"]
+ENTRYPOINT ["java", "-jar", "$jarPath"]
