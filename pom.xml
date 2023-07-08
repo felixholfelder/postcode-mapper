@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.postcode.mapper</groupId>
 	<artifactId>postcode-mapper</artifactId>
-	<version>1.0.0</version>
+	<version>${version}</version>
 	<name>postcode-mapper</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
