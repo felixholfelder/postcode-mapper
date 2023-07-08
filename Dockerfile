@@ -8,6 +8,8 @@ RUN ./mvnw clean install package -Drevision=${revision}
 
 ARG jarPath="target/postcode-mapper-${revision}.jar"
 
+RUN echo $jarPath
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "$jarPath"]
