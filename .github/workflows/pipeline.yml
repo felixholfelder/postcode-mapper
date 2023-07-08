@@ -45,7 +45,7 @@ jobs:
         run: ./mvnw -Dmaven.test.skip=true clean install
 
       - name: Build Jar-File
-        run: ./mvnw -Dmaven.test.skip=true -Dversion=${{ env.VERSION }} package
+        run: ./mvnw -Dmaven.test.skip=true -Drevision=${{ env.VERSION }} package
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
