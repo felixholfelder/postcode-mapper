@@ -1,5 +1,7 @@
 FROM openjdk:17-alpine
 
+RUN echo
+
 ARG version
 ENV version=$version
 
