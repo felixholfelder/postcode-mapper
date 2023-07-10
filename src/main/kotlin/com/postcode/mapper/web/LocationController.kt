@@ -14,4 +14,9 @@ class LocationController(val locationService: LocationService) {
   fun getLocations(@RequestParam query: String): MutableList<Location> {
     return locationService.getLocations(query)
   }
+
+  @GetMapping("/test")
+  fun test(@RequestParam query: String): String {
+    return "hello $query"
+  }
 }
