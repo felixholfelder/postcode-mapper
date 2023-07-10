@@ -10,7 +10,7 @@ RUN ./mvnw clean install package -Drevision=${revision}
 
 RUN echo $jarPath
 
-COPY target/*.jar app.jar
+COPY BOOT-INF/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app.jar"]
