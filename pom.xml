@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <kotlin.version>1.8.22</kotlin.version>
         <swagger.version>1.6.15</swagger.version>
+        <firebase.version>9.2.0</firebase.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,7 +40,7 @@
         <dependency>
             <groupId>com.google.firebase</groupId>
             <artifactId>firebase-admin</artifactId>
-            <version>9.2.0</version>
+            <version>${firebase.version}</version>
         </dependency>
 
         <dependency>
