@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
 
 ARG revision
 ENV revision="1.0.0"
