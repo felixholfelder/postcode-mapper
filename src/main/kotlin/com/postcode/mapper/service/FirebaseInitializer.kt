@@ -16,6 +16,7 @@ class FirebaseInitializer {
   @PostConstruct
   fun initialize() {
     try {
+      println("initilize firebase");
       val serviceAccount = FileInputStream("./postcode-mapper.json")
       val options: FirebaseOptions = FirebaseOptions.Builder()
         .setCredentials(GoogleCredentials.fromStream(serviceAccount))
