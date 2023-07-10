@@ -1,15 +1,16 @@
 FROM openjdk:17-alpine
 
+VOLUME /tmp
+
 ARG revision
 ENV revision="1.0.0"
 
 COPY . .
 RUN ./mvnw clean install package -Drevision=${revision}
 
-ARG jarPath="target/postcode-mapper-${revision}.jar"
-
 RUN echo $jarPath
 
-EXPOSE 8080
+COPY target/*.jar app.jar
 
-ENTRYPOINT ["java", "-jar", "target/postcode-mapper-1.0.0.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
