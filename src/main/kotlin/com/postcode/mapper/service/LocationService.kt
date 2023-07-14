@@ -9,17 +9,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class LocationService {
-  fun getLocations(query: String): MutableList<Location> {
+  fun getLocations(query: String): List<Location> {
     val firestore: Firestore = FirestoreClient.getFirestore()
     var documents: List<QueryDocumentSnapshot> = searchFor(QueryParam.POSTCODE, query, firestore)
     if (documents.isEmpty()) {
       documents = searchFor(QueryParam.CITY, query, firestore)
     }
-    val locations: MutableList<Location> = mutableListOf()
-    for (document in documents) {
-      locations.add(document.toObject(Location::class.java))
-    }
-    return locations
+    return documents.map { it.toObject(Location::class.java) }
   }
 
   fun searchFor(param: QueryParam, query: String, firestore: Firestore): List<QueryDocumentSnapshot> {

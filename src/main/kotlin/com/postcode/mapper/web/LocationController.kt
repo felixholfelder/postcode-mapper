@@ -11,12 +11,5 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/locations")
 class LocationController(val locationService: LocationService) {
   @GetMapping
-  fun getLocations(@RequestParam query: String): MutableList<Location> {
-    return locationService.getLocations(query)
-  }
-
-  @GetMapping("/test")
-  fun test(@RequestParam query: String): String {
-    return "hello $query"
-  }
+  fun getLocations(@RequestParam query: String) = locationService.getLocations(query)
 }
