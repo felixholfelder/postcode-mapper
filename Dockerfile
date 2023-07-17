@@ -12,4 +12,4 @@ RUN echo $jarPath
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "target/postcode-mapper-1.0.0.jar"]
+ENTRYPOINT ["java", "-Dserver.port=$PORT $JAVA_OPTS", "-jar", "target/postcode-mapper-1.0.0.jar"]
