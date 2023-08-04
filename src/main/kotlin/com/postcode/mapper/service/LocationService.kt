@@ -1,26 +1,17 @@
 package com.postcode.mapper.com.postcode.mapper.service
 
-import com.google.cloud.firestore.Firestore
-import com.google.firebase.cloud.FirestoreClient
-import com.postcode.mapper.com.postcode.mapper.entity.Location
-import com.postcode.mapper.com.postcode.mapper.enums.QueryParam
+import com.postcode.mapper.com.postcode.mapper.entity.LocationEntity
+import com.postcode.mapper.com.postcode.mapper.model.Location
+import com.postcode.mapper.com.postcode.mapper.repository.LocationRepository
 import org.springframework.stereotype.Service
 
 @Service
-class LocationService {
+class LocationService(val locationRepository: LocationRepository) {
   fun getLocations(query: String): List<Location> {
-    val firestore: Firestore = FirestoreClient.getFirestore()
-    var locations: List<Location> = searchFor(QueryParam.POSTCODE, query, firestore)
-    if (locations.isEmpty()) {
-      locations = searchFor(QueryParam.CITY, query, firestore)
+    var locationEntities: List<LocationEntity> = locationRepository.findByPostcode(query)
+    if (locationEntities.isEmpty()) {
+      locationEntities = locationRepository.findByCity(query)
     }
-    return locations
-  }
-
-  private inline fun <reified T> searchFor(param: QueryParam, query: String, firestore: Firestore): List<T> {
-    return firestore.collection("locations")
-      .whereGreaterThanOrEqualTo(param.value, query)
-      .whereLessThanOrEqualTo(param.value, "${query}\uf7ff")
-      .get().get().toObjects(T::class.java)
+    return locationEntities.map { it.toModel() }.toList()
   }
 }

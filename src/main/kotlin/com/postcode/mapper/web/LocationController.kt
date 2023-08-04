@@ -1,6 +1,5 @@
 package com.postcode.mapper.web
 
-import com.postcode.mapper.com.postcode.mapper.entity.Location
 import com.postcode.mapper.com.postcode.mapper.service.LocationService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

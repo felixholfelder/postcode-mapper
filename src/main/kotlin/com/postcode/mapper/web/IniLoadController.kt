@@ -1,11 +1,8 @@
 package com.postcode.mapper.web
 
-import com.google.api.core.ApiFuture
-import com.google.cloud.firestore.Firestore
-import com.google.cloud.firestore.WriteResult
-import com.google.firebase.cloud.FirestoreClient
-import com.postcode.mapper.com.postcode.mapper.entity.Location
-import org.springframework.web.bind.annotation.GetMapping
+import com.postcode.mapper.com.postcode.mapper.entity.LocationEntity
+import com.postcode.mapper.com.postcode.mapper.repository.LocationRepository
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.io.FileInputStream
@@ -13,26 +10,22 @@ import java.io.InputStream
 
 @RestController
 @RequestMapping("/api/load")
-class IniLoadController {
+class IniLoadController(val locationRepository: LocationRepository) {
 
-  @GetMapping
+  @PostMapping
   fun loadCSV(): String {
-    for (location in getLocationsFromFile()) {
-      val dbFirestore: Firestore = FirestoreClient.getFirestore()
-      val collectionsApiFuture: ApiFuture<WriteResult> = dbFirestore.collection("locations").document().set(location)
-      collectionsApiFuture.get().getUpdateTime().toString()
-    }
-    return "done"
+    getLocationsFromFile().forEach { locationRepository.save(it) }
+    return "done!"
   }
 
-  fun getLocationsFromFile(): List<Location> {
+  fun getLocationsFromFile(): List<LocationEntity> {
     val inputStream: InputStream = FileInputStream("plz.csv")
     val reader = inputStream.bufferedReader()
     return reader.lineSequence()
       .filter { it.isNotBlank() }
       .map {
-        val (postcode, city, lon, lat) = it.split(';', ignoreCase = false)
-        Location(postcode, city, lat, lon)
+        val (postcode, city, lng, lat) = it.split(';', ignoreCase = false)
+        LocationEntity(null, postcode, city, lat, lng)
       }.toList()
   }
 }
