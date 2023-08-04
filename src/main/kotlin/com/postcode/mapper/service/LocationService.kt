@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class LocationService(val locationRepository: LocationRepository) {
   fun getLocations(query: String): List<Location> {
-    var locationEntities: List<LocationEntity> = locationRepository.findByPostcode(query)
+    val searchQuery = "%$query%"
+    var locationEntities: List<LocationEntity> = locationRepository.findByPostcode(searchQuery)
     if (locationEntities.isEmpty()) {
-      locationEntities = locationRepository.findByCity(query)
+      locationEntities = locationRepository.findByCity(searchQuery)
     }
     return locationEntities.map { it.toModel() }.toList()
   }

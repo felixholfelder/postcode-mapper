@@ -24,5 +24,7 @@ data class LocationEntity(
   @Column(name = "lng")
   val lng: String?,
 ) {
+
+  constructor() : this(null, null, null, null, null)
   fun toModel(): Location = Location(id, postcode, city, lat, lng)
 }
