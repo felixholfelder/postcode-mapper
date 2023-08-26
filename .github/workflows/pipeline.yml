@@ -16,7 +16,6 @@ env:
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
-
 jobs:
   qualitygate:
     runs-on: ubuntu-latest
@@ -96,7 +95,7 @@ jobs:
   clean-up:
     runs-on: ubuntu-latest
     if: always()
-    needs: deploy
+    needs: dockerize
     steps:
       - name: Delete artifacts
         uses: geekyeggo/delete-artifact@v2
