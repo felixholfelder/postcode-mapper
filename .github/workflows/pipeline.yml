@@ -16,6 +16,7 @@ env:
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
+
 jobs:
   qualitygate:
     runs-on: ubuntu-latest
