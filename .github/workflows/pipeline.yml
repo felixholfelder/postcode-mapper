@@ -52,7 +52,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build --build-arg revision=${{ env.VERSION }} . -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-          docker build --build-arg revision=${{ env.VERSION }} . -t ${{ env.IMAGE_NAME }}:latest
+          docker build --build-arg revision=latest . -t ${{ env.IMAGE_NAME }}:latest
 
       - name: Push to Dockerhub
         run: |

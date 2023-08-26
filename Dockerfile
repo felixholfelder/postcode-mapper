@@ -1,15 +1,6 @@
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.14
-
+FROM openjdk:17-alpine
 ARG revision
-ENV revision="1.0.0"
-
-COPY . .
-RUN ./mvnw clean install package -Drevision=${revision}
-
-ARG jarPath="target/refuel-service-${revision}.jar"
-
-RUN echo $jarPath
-
+ENV revision=$revision
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "target/postcode-mapper-1.0.0.jar"]
+COPY target/postcode-mapper-${revision}.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
