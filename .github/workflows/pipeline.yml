@@ -49,6 +49,9 @@ jobs:
       - name: Build Jar-File
         run: ./mvnw -Dmaven.test.skip=true -Drevision=${{ env.VERSION }} package
 
+      - name: Build latest Jar-File
+        run: ./mvnw -Dmaven.test.skip=true -Drevision=latest package
+
       - name: Build Docker image
         run: |
           docker build --build-arg revision=${{ env.VERSION }} . -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
