@@ -2,17 +2,26 @@ package com.postcode.mapper.com.postcode.mapper.service
 
 import com.postcode.mapper.com.postcode.mapper.entity.LocationEntity
 import com.postcode.mapper.com.postcode.mapper.model.Location
-import com.postcode.mapper.com.postcode.mapper.repository.LocationRepository
+import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
+
 @Service
-class LocationService(val locationRepository: LocationRepository) {
-  fun getLocations(query: String): List<Location> {
-    val searchQuery = "%$query%"
-    var locationEntities: List<LocationEntity> = locationRepository.findByPostcode(searchQuery)
+class LocationService(val mongoOperations: MongoOperations) {
+  val CASE_INSENSITIVE = "i";
+  fun getLocations(queryString: String): List<Location> {
+    var query = Query().addCriteria(Criteria.where("postcode").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
+    var locationEntities: List<LocationEntity> = mongoOperations.find(query, LocationEntity::class.java)
     if (locationEntities.isEmpty()) {
-      locationEntities = locationRepository.findByCity(searchQuery)
+      query = Query().addCriteria(Criteria.where("city").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
+      locationEntities = mongoOperations.find(query, LocationEntity::class.java)
     }
     return locationEntities.map { it.toModel() }.toList()
+  }
+
+  private fun toLikeRegex(source: String): String {
+    return source.replace("\\*".toRegex(), ".*")
   }
 }
