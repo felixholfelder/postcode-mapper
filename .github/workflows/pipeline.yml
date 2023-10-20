@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
 #      - name: Checkstyle
 #        run: ./mvnw checkstyle:check
@@ -35,7 +35,7 @@ jobs:
 #    if: github.ref_type == 'tag'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Java 17
         uses: actions/setup-java@v3
@@ -62,7 +62,7 @@ jobs:
     needs: dockerize
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create config
         run: |
