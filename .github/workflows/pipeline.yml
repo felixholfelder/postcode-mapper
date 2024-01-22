@@ -83,6 +83,6 @@ jobs:
     needs: deploy
     steps:
       - name: Delete artifacts
-        uses: geekyeggo/delete-artifact@v2
+        uses: geekyeggo/delete-artifact@v4
         with:
           name: refuel-service-artifact
