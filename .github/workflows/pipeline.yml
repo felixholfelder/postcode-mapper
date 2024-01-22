@@ -13,6 +13,7 @@ on:
       - '**'
 
 env:
+  APP_NAME: postcode-mapper
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
@@ -75,7 +76,7 @@ jobs:
         run: kubectl config use-context default
 
       - name: Deploy app
-        run: kubectl set image deployments/refuel-service-deployment server=${{ env.IMAGE_NAME }}:${{ env.VERSION }} -n refuel-service
+        run: kubectl set image deployments/${{ env.APP_NAME }}-deployment server=${{ env.IMAGE_NAME }}:${{ env.VERSION }} -n refuel-service
 
   clean-up:
     runs-on: ubuntu-latest
