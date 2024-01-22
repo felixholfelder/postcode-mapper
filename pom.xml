@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.1</version>
+        <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.postcode.mapper</groupId>
@@ -15,10 +15,10 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.8.22</kotlin.version>
-        <spring-cloud.version>2022.0.3</spring-cloud.version>
+        <kotlin.version>1.9.22</kotlin.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
         <coroutines.version>1.7.2</coroutines.version>
-        <db.version>42.6.0</db.version>
+        <db.version>42.7.1</db.version>
     </properties>
 
     <dependencyManagement>
