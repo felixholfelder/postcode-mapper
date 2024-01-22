@@ -1,7 +1,7 @@
 package com.postcode.mapper.web
 
 import com.postcode.mapper.com.postcode.mapper.entity.LocationEntity
-import com.postcode.mapper.com.postcode.mapper.repository.LocationRepository
+import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -10,11 +10,11 @@ import java.io.InputStream
 
 @RestController
 @RequestMapping("/api/load")
-class IniLoadController(val locationRepository: LocationRepository) {
+class IniLoadController(val mongoOperations: MongoOperations) {
 
   @PostMapping
   fun loadCSV(): String {
-    getLocationsFromFile().forEach { locationRepository.save(it) }
+    getLocationsFromFile().forEach { mongoOperations.save(it) }
     return "done!"
   }
 

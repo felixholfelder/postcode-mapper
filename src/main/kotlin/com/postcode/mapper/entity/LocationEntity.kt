@@ -1,27 +1,25 @@
 package com.postcode.mapper.com.postcode.mapper.entity
 
 import com.postcode.mapper.com.postcode.mapper.model.Location
-import jakarta.persistence.*
-import java.util.*
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
 
-@Entity(name = "LOCATION")
-@Table(name = "LOCATION", schema = "public")
+@Document(collection = "location")
 data class LocationEntity(
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "id")
-  val id: UUID?,
+  val id: String?,
 
-  @Column(name = "postcode")
+  @Indexed
   val postcode: String?,
 
-  @Column(name = "city")
+  @Indexed
   val city: String?,
 
-  @Column(name = "lat")
+  @Indexed
   val lat: String?,
 
-  @Column(name = "lng")
+  @Indexed
   val lng: String?,
 ) {
 
