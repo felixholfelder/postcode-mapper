@@ -18,7 +18,7 @@
         <kotlin.version>1.9.22</kotlin.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <coroutines.version>1.7.2</coroutines.version>
-        <db.version>42.7.1</db.version>
+        <db.version>42.7.2</db.version>
     </properties>
 
     <dependencyManagement>
