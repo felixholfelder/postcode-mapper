@@ -18,7 +18,6 @@
         <kotlin.version>1.9.22</kotlin.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <coroutines.version>1.7.2</coroutines.version>
-        <db.version>42.7.1</db.version>
     </properties>
 
     <dependencyManagement>
@@ -68,16 +67,6 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-
-        <!-- *************************************************** -->
-        <!-- 3rd Party 											 -->
-        <!-- *************************************************** -->
-
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${db.version}</version>
         </dependency>
 
         <!-- *************************************************** -->
