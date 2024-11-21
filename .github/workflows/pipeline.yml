@@ -14,7 +14,7 @@ on:
 
 env:
   APP_NAME: postcode-mapper
-  NAMESPACE: postcode-mapper
+  NAMESPACE: refuel-service
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
