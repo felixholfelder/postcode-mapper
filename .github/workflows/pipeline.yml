@@ -14,7 +14,7 @@ on:
 
 env:
   APP_NAME: postcode-mapper
-  NAMESPACE: refuel-service
+  NAMESPACE: postcode-mapper
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
@@ -35,17 +35,17 @@ jobs:
         run: ./mvnw -Dmaven.test.skip=true clean install
 
       - name: Build Jar-File
-        run: ./mvnw -Dmaven.test.skip=true -Drevision=${{ env.VERSION }} package
+        run: ./mvnw -Dmaven.test.skip=true -Drevision=${{env.VERSION}} package
 
       - name: Build Docker image
         if: github.ref_type == 'tag' || github.ref_name == 'main'
-        run: docker build --build-arg revision=${{ env.VERSION }} . -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        run: docker build --build-arg revision=${{env.VERSION}} . -t ${{env.IMAGE_NAME }}:${{env.VERSION}}
 
       - name: Push to Dockerhub
         if: github.ref_type == 'tag' || github.ref_name == 'main'
         run: |
-          docker login -u=${{ secrets.DOCKERHUB_USER }} -p=${{ secrets.DOCKERHUB_PASS }}
-          docker push ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          docker login -u=${{secrets.DOCKERHUB_USER}} -p=${{secrets.DOCKERHUB_PASS}}
+          docker push ${{env.IMAGE_NAME}}:${{env.VERSION}}
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
 
       - name: Get current server version
         run: |
-          SERVER_VERSION=$(kubectl describe deployment -n ${{ env.NAMESPACE }} ${{ env.APP_NAME }}-deployment | grep Image | sed -E 's/.*:(.*)/\1/')
+          SERVER_VERSION=$(kubectl describe deployment -n ${{env.NAMESPACE}} ${{env.APP_NAME}}-deployment | grep Image | sed -E 's/.*:(.*)/\1/')
           echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
 
       - name: Set new image
@@ -82,7 +82,7 @@ jobs:
 
       - name: Get fresh server version
         run: |
-          SERVER_VERSION=$(kubectl describe deployment ${{ env.APP_NAME }}-deployment -n ${{ env.NAMESPACE }} | grep Image | sed -E 's/.*:(.*)/\1/')
+          SERVER_VERSION=$(kubectl describe deployment ${{env.APP_NAME}}-deployment -n ${{env.NAMESPACE}} | grep Image | sed -E 's/.*:(.*)/\1/')
           echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
 
       - name: Final check
