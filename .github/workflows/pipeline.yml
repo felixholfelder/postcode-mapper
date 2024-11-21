@@ -14,26 +14,13 @@ on:
 
 env:
   APP_NAME: postcode-mapper
+  NAMESPACE: refuel-service
   IMAGE_NAME: felixholfelder/postcode-mapper
   VERSION: ${{ github.ref_name }}
 
 jobs:
-  qualitygate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-#      - name: Checkstyle
-#        run: ./mvnw checkstyle:check
-#
-#      - name: PMD
-#        run: ./mvnw pmd:check
-
   dockerize:
     runs-on: ubuntu-latest
-    needs: qualitygate
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -62,8 +49,8 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: github.actor != 'renovate[bot]'
     needs: dockerize
+    if: github.actor != 'renovate[bot]'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,5 +63,32 @@ jobs:
       - name: Use context
         run: kubectl config use-context default
 
-      - name: Deploy app
-        run: kubectl set image deployments/${{ env.APP_NAME }}-deployment server=${{ env.IMAGE_NAME }}:${{ env.VERSION }} -n refuel-service
+      - name: Get current server version
+        run: |
+          SERVER_VERSION=$(kubectl describe deployment -n ${{ env.NAMESPACE }} ${{ env.APP_NAME }}-deployment | grep Image | sed -E 's/.*:(.*)/\1/')
+          echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
+
+      - name: Set new image
+        run: kubectl set image deployments/${{env.APP_NAME}}-deployment server=${{env.IMAGE_NAME}}:${{env.VERSION}} -n ${{env.NAMESPACE}}
+
+      - name: Delete pod
+        if: env.SERVER_VERSION == env.VERSION
+        run: kubectl delete pod -l app=$APP_NAME-deployment -n $NAMESPACE
+
+      - name: Healthcheck
+        run: |
+          sleep 10s
+          kubectl wait --for=condition=ready pod -l app=${{env.APP_NAME}}-deployment -n ${{env.NAMESPACE}} --timeout=30s
+
+      - name: Get fresh server version
+        run: |
+          SERVER_VERSION=$(kubectl describe deployment -n ${{ env.NAMESPACE }} ${{ env.APP_NAME }}-deployment | grep Image | sed -E 's/.*:(.*)/\1/')
+          echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
+
+      - name: Final check
+        if: env.SERVER_VERSION != env.VERSION
+        run: |
+          echo "Server Version - ${{env.SERVER_VERSION}}"
+          echo "Neue Version - ${{env.VERSION}}"
+          echo "Die neue Version konnte nicht deployed werden!"
+          exit 1
