@@ -82,7 +82,7 @@ jobs:
 
       - name: Get fresh server version
         run: |
-          SERVER_VERSION=$(kubectl describe deployment -n ${{ env.NAMESPACE }} ${{ env.APP_NAME }}-deployment | grep Image | sed -E 's/.*:(.*)/\1/')
+          SERVER_VERSION=$(kubectl describe deployment ${{ env.APP_NAME }}-deployment -n ${{ env.NAMESPACE }} | grep Image | sed -E 's/.*:(.*)/\1/')
           echo "SERVER_VERSION=$SERVER_VERSION" >> $GITHUB_ENV
 
       - name: Final check
