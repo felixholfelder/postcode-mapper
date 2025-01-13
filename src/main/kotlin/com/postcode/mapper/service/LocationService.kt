@@ -13,10 +13,11 @@ class LocationService(val mongoOperations: MongoOperations) {
   val CASE_INSENSITIVE = "i";
   fun getLocations(queryString: String): List<Location> {
     var query = Query().addCriteria(Criteria.where("postcode").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
-    var locationEntities: List<LocationEntity> = mongoOperations.find(query, LocationEntity::class.java)
+    var locationEntities: List<LocationEntity> = mongoOperations.find(query, LocationEntity::class.java).sortedBy { it.postcode }
     if (locationEntities.isEmpty()) {
       query = Query().addCriteria(Criteria.where("city").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
       locationEntities = mongoOperations.find(query, LocationEntity::class.java)
+        .sortedWith(compareBy(LocationEntity::city, LocationEntity::postcode))
     }
     return locationEntities.map { it.toModel() }.toList()
   }
