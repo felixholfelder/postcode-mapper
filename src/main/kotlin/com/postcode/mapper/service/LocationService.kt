@@ -1,34 +1,37 @@
 package com.postcode.mapper.com.postcode.mapper.service
 
-import com.postcode.mapper.com.postcode.mapper.entity.LocationEntity
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.postcode.mapper.com.postcode.mapper.model.Location
-import org.springframework.data.mongodb.core.MongoOperations
-import org.springframework.data.mongodb.core.query.Criteria
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
+import java.io.File
 
 
 @Service
-class LocationService(val mongoOperations: MongoOperations) {
-  val CASE_INSENSITIVE = "i"
+class LocationService {
   fun getLocations(queryString: String): List<Location> {
-    var query = Query().addCriteria(Criteria.where("postcode").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
-    var locationEntities: List<LocationEntity> = mongoOperations.find(query, LocationEntity::class.java).sortedBy { it.postcode }
-    if (locationEntities.isEmpty()) {
-      query = Query().addCriteria(Criteria.where("city").regex(toLikeRegex(queryString), CASE_INSENSITIVE))
-      locationEntities = mongoOperations.find(query, LocationEntity::class.java)
-        .sortedWith { a, b ->
-          when {
-            a.city == queryString -> -1   // "a" matches the search key exactly, so it comes first
-            b.city == queryString -> 1    // "b" matches the search key exactly, so it comes after "a"
-            a.city!!.startsWith(queryString) -> -1  // "a" contains the search key, so it comes before "b"
-            b.city!!.startsWith(queryString) -> 1  // "b" contains the search key, so it comes after "a"
-            else -> a.city.compareTo(b.city)  // If neither matches exactly, sort alphabetically
-          }
-        }
-    }
-    return locationEntities.map { it.toModel() }.toList()
-  }
+    val reader = csvReader { delimiter = ';' }.readAll(File("plz.csv"))
 
-  private fun toLikeRegex(source: String): String = source.replace("\\*".toRegex(), ".*")
+    val list: List<Location> = reader
+      .map { row -> Location(row[0], row[1], row[2], row[3]) }
+
+    var filtered: List<Location> = list.filter { it.postcode.contains(queryString) }
+    if (filtered.isEmpty())
+      filtered = list.filter { it.city.uppercase().contains(queryString.uppercase()) }
+
+    val t = filtered.sortedWith { a, b ->
+      val aCityUpper = a.city.uppercase()
+      val bCityUpper = b.city.uppercase()
+      val queryUpper = queryString.uppercase()
+
+      when {
+        aCityUpper == queryUpper && bCityUpper != queryUpper -> -1
+        bCityUpper == queryUpper && aCityUpper != queryUpper -> 1
+        aCityUpper.startsWith(queryUpper) && !bCityUpper.startsWith(queryUpper) -> -1
+        bCityUpper.startsWith(queryUpper) && !aCityUpper.startsWith(queryUpper) -> 1
+        else -> aCityUpper.compareTo(bCityUpper)
+      }
+    }
+
+    return t
+  }
 }
