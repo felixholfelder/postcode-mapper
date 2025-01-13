@@ -20,8 +20,8 @@ class LocationService(val mongoOperations: MongoOperations) {
         .sortedWith { a, b ->
           when {
             a.city == queryString -> -1   // "a" matches the search key exactly, so it comes first
-            b.city == queryString -> 1    // "b" matches the search key exactly, so it comes after "a"
-            else -> a.city!!.compareTo(b.city!!)  // If neither matches exactly, sort alphabetically
+            b.city!!.startsWith(queryString) -> 1    // "b" matches the search key exactly, so it comes after "a"
+            else -> a.city!!.compareTo(b.city)  // If neither matches exactly, sort alphabetically
           }
         }
     }
