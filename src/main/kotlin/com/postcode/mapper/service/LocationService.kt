@@ -10,32 +10,13 @@ import java.io.File
 class LocationService {
   fun getLocations(queryString: String): List<Location> {
     val reader = csvReader { delimiter = ';' }.readAll(File("plz.csv"))
-    var t: List<Location>
+    val list: List<Location> = reader.map { row -> Location(row[0], row[1], row[2], row[3]) }
+    val queryUpper = queryString.uppercase()
 
-    val list: List<Location> = reader
-      .map { row -> Location(row[0], row[1], row[2], row[3]) }
-
-    var filtered: List<Location> = list.filter { it.postcode.contains(queryString) }
-    t = filtered.sortedWith { a, b ->
-      val aUpper = a.postcode.uppercase()
-      val bUpper = b.postcode.uppercase()
-      val queryUpper = queryString.uppercase()
-
-      when {
-        aUpper == queryUpper && bUpper != queryUpper -> -1
-        bUpper == queryUpper && aUpper != queryUpper -> 1
-        aUpper.startsWith(queryUpper) && !bUpper.startsWith(queryUpper) -> -1
-        bUpper.startsWith(queryUpper) && !aUpper.startsWith(queryUpper) -> 1
-        else -> aUpper.compareTo(bUpper)
-      }
-    }
-
-    if (filtered.isEmpty()) {
-      filtered = list.filter { it.city.uppercase().contains(queryString.uppercase()) }
-      t = filtered.sortedWith { a, b ->
-        val aUpper = a.city.uppercase()
-        val bUpper = b.city.uppercase()
-        val queryUpper = queryString.uppercase()
+    fun sortLocations(locations: List<Location>, getKey: (Location) -> String): List<Location> {
+      return locations.sortedWith { a, b ->
+        val aUpper = getKey(a).uppercase()
+        val bUpper = getKey(b).uppercase()
 
         when {
           aUpper == queryUpper && bUpper != queryUpper -> -1
@@ -47,6 +28,13 @@ class LocationService {
       }
     }
 
-    return t
+    var filtered = list.filter { it.postcode.uppercase().contains(queryUpper) }
+
+    if (filtered.isEmpty()) {
+      filtered = list.filter { it.city.uppercase().contains(queryUpper) }
+      return sortLocations(filtered, Location::city)
+    }
+
+    return sortLocations(filtered, Location::postcode)
   }
 }
